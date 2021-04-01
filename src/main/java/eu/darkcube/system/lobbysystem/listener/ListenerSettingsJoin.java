@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.PlayerInventory;
 
 import eu.darkcube.system.lobbysystem.Lobby;
-import eu.darkcube.system.lobbysystem.inventory.pserver.PServerSupport;
+import eu.darkcube.system.lobbysystem.pserver.PServerSupport;
 import eu.darkcube.system.lobbysystem.user.User;
 import eu.darkcube.system.lobbysystem.user.UserWrapper;
 import eu.darkcube.system.lobbysystem.util.DataManager;

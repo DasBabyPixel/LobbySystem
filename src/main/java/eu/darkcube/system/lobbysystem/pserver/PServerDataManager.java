@@ -1,4 +1,4 @@
-package eu.darkcube.system.lobbysystem.inventory.pserver;
+package eu.darkcube.system.lobbysystem.pserver;
 
 import java.util.ArrayList;
 import java.util.Collection;

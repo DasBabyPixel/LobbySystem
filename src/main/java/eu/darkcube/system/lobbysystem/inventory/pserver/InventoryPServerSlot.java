@@ -11,7 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import eu.darkcube.system.lobbysystem.Lobby;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.InventoryType;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.PagedInventoryOld;
-import eu.darkcube.system.lobbysystem.inventory.pserver.PServerDataManager.PServerUserSlot;
+import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlot;
 import eu.darkcube.system.lobbysystem.user.User;
 import eu.darkcube.system.lobbysystem.util.Item;
 

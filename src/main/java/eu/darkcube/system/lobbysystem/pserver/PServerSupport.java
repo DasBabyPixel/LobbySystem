@@ -1,8 +1,9 @@
-package eu.darkcube.system.lobbysystem.inventory.pserver;
+package eu.darkcube.system.lobbysystem.pserver;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import eu.darkcube.system.lobbysystem.inventory.pserver.InventoryPServer;
 import eu.darkcube.system.lobbysystem.user.User;
 import eu.darkcube.system.lobbysystem.user.UserWrapper;
 import eu.darkcube.system.pserver.common.PServer;

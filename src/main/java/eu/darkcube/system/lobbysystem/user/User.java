@@ -18,7 +18,7 @@ import eu.darkcube.system.lobbysystem.Lobby;
 import eu.darkcube.system.lobbysystem.event.EventGadgetSelect;
 import eu.darkcube.system.lobbysystem.gadget.Gadget;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.Inventory;
-import eu.darkcube.system.lobbysystem.inventory.pserver.PServerDataManager.PServerUserSlots;
+import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlots;
 import eu.darkcube.system.lobbysystem.util.Language;
 import eu.darkcube.system.lobbysystem.util.ParticleEffect;
 import eu.darkcube.system.lobbysystem.util.UUIDManager;
