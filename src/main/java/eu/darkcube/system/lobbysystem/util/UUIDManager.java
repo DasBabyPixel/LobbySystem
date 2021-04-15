@@ -11,7 +11,7 @@ import de.dytanic.cloudnet.driver.CloudNetDriver;
 import de.dytanic.cloudnet.ext.bridge.player.IPlayerManager;
 
 public class UUIDManager {
-	
+
 	public static IPlayerManager getManager() {
 		return CloudNetDriver.getInstance().getServicesRegistry().getFirstService(IPlayerManager.class);
 	}

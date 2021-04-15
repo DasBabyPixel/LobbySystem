@@ -128,7 +128,10 @@ public class ListenerScoreboard extends BaseListener {
 				LuckPerms lp = LuckPermsProvider.get();
 
 				User user = lp.getUserManager().getUser(p.getUniqueId());
-				String suffix = user.getCachedData().getMetaData().getPrefix().split(" ")[0];
+				String prefix = user.getCachedData().getMetaData().getPrefix();
+				if (prefix == null)
+					prefix = "";
+				String suffix = prefix.split(" ")[0];
 
 				setSuffix(rank, ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', suffix)));
 

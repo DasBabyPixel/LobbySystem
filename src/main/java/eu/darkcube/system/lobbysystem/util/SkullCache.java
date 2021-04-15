@@ -77,7 +77,6 @@ public class SkullCache {
 				.filter(ps -> ps != e.getPServer())
 				.map(PServer::getOwners)
 				.forEach(uuids::addAll);
-		System.out.println(uuids);
 		for (UUID owner : e.getPServer().getOwners()) {
 			if (!uuids.contains(owner)) {
 				unloadFromCache(owner);
@@ -104,11 +103,10 @@ public class SkullCache {
 				.filter(ps -> ps != e.getPServer())
 				.map(PServer::getOwners)
 				.forEach(uuids::addAll);
-		System.out.println(uuids);
 		if (!uuids.contains(e.getOwner())) {
 			unloadFromCache(e.getOwner());
 		} else {
-			System.out.println("DOnt unloading user");
+			System.out.println("[PServer] [SkullCache] Not unloading user");
 		}
 	}
 

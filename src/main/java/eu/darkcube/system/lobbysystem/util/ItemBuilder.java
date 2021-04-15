@@ -971,7 +971,7 @@ public class ItemBuilder {
 
 		item.setDurability(damage);
 
-		meta = meta == null || item.getItemMeta().equals(meta) ? item.getItemMeta() : meta;
+		meta = (meta == null || item.getItemMeta().equals(meta)) ? item.getItemMeta() : meta;
 
 		if (data != null) {
 
@@ -1007,10 +1007,9 @@ public class ItemBuilder {
 
 		}
 
-		if (material != Material.AIR) {
+		item.setItemMeta(meta);
 
-			item.setItemMeta(meta);
-
+		if (unbreakable) {
 			net.minecraft.server.v1_8_R3.ItemStack itemNMS = org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
 					.asNMSCopy(item);
 			net.minecraft.server.v1_8_R3.NBTTagCompound compound = itemNMS.hasTag() ? itemNMS.getTag()
@@ -1020,7 +1019,6 @@ public class ItemBuilder {
 			itemNMS.setTag(compound);
 			item.setItemMeta(
 					org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack.asBukkitCopy(itemNMS).getItemMeta());
-
 		}
 
 		return item;

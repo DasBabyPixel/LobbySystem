@@ -8,61 +8,62 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<wagon.api.version>3.0.0</wagon.api.version>
 	</properties>
 
 	<build>
 		<plugins>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-jar-plugin</artifactId> 
-				<version>2.3.1</version> <configuration> <outputDirectory>C:\Users\Java-Lorenz\Desktop\CloudNet\local\services\lobby-1\plugins</outputDirectory> 
-				</configuration> </plugin> -->
+			<!-- darkcube-root -->
 
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.0.1</version>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>wagon-maven-plugin</artifactId>
+				<version>2.0.0</version>
+
 				<executions>
 					<execution>
-						<id>copy-to-static-lobby</id>
+						<id>copy-to-local-darkcube-cloudnet</id>
 						<phase>install</phase>
 						<goals>
-							<goal>copy</goal>
+							<goal>upload-single</goal>
 						</goals>
 						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>${project.groupId}</groupId>
-									<artifactId>${project.artifactId}</artifactId>
-									<version>${project.version}</version>
-									<type>${project.packaging}</type>
-									<destFileName>${project.artifactId}.jar</destFileName>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>C:\Users\Java-Lorenz\Desktop\CloudNet\local\services\lobby-1\plugins</outputDirectory>
+							<url>file:///C:/Users/Lorenz/Documents/DarkCube/CloudNet/local/services/lobby-1/plugins</url>
+							<toFile>${project.artifactId}.jar</toFile>
+							<fromFile>${project.build.directory}/${project.build.finalName}.jar</fromFile>
 						</configuration>
 					</execution>
 					<execution>
-						<id>copy-to-lobby-template</id>
-						<phase>install</phase>
+						<id>upload-artifact</id>
+						<phase>deploy-to-darkcube</phase>
 						<goals>
-							<goal>copy</goal>
+							<goal>upload-single</goal>
 						</goals>
 						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>${project.groupId}</groupId>
-									<artifactId>${project.artifactId}</artifactId>
-									<version>${project.version}</version>
-									<type>${project.packaging}</type>
-									<destFileName>${project.artifactId}.jar</destFileName>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>C:\Users\Java-Lorenz\Desktop\CloudNet\local\templates\lobby\default\plugins</outputDirectory>
+							<url>sftp://176.9.172.105</url>
+							<fromFile>${project.build.directory}/${project.build.finalName}.jar</fromFile>
+							<toFile>/home/minecraft/cloud/cloudnet/local/templates/lobby/default/plugins/${project.artifactId}.jar</toFile>
+							<serverId>darkcube-root</serverId>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-file</artifactId>
+				<version>${wagon.api.version}</version>
+			</extension>
+		</extensions>
 	</build>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>synergian-repo</id>
+			<url>https://raw.github.com/synergian/wagon-git/releases</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<repositories>
 		<repository>
@@ -98,12 +99,12 @@
 		<dependency>
 			<groupId>eu.darkcube.system</groupId>
 			<artifactId>StatsAPI</artifactId>
-			<version>stats</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.darkcube.system</groupId>
 			<artifactId>DarkCubeSystem</artifactId>
-			<version>1.0</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.spigotmc</groupId>

@@ -11,26 +11,23 @@ import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlot
 import eu.darkcube.system.lobbysystem.user.User;
 import eu.darkcube.system.lobbysystem.util.Item;
 
-public class InventoryPServerSlot extends DefaultPagedInventory {
+public class InventoryNewPServerSlot extends DefaultPagedInventory {
 
-	private PServerUserSlot slot;
+	public final PServerUserSlot psslot;
+	public final int slot;
 
-	public InventoryPServerSlot(User user, PServerUserSlot psslot, int slot) {
-		super(Item.PSERVER_SLOT.getDisplayName(user, Integer.toString(slot)), Item.PSERVER_SLOT,
+	public InventoryNewPServerSlot(User user, PServerUserSlot psslot, int slot) {
+		super(Item.PSERVER_NEW_SLOT.getDisplayName(user, Integer.toString(slot)), Item.PSERVER_NEW_SLOT,
 				InventoryType.PSERVER_SLOT);
-		this.slot = psslot;
+		this.psslot = psslot;
+		this.slot = slot;
 	}
 
 	@Override
 	protected Map<Integer, ItemStack> contents(User user) {
 		Map<Integer, ItemStack> m = new HashMap<>();
-		if (slot.isUsed()) {
-			
-		} else {
-			for (int s = 0; s < getPageSize(); s++) {
-				m.put(s, Item.LOADING.getItem(user));
-			}
-		}
+		m.put(getPageSize() / 2 - 1, Item.WORLD_PSERVER.getItem(user));
+		m.put(getPageSize() / 2 + 1, Item.GAME_PSERVER.getItem(user));
 		return m;
 	}
 }

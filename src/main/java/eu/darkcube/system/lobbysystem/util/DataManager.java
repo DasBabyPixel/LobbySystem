@@ -33,11 +33,19 @@ public class DataManager {
 		setDefault("dailyrewardNPCLocation", Locations.toDocument(Locations.DEFAULT, false));
 		setDefault("woolbattleSpawn", Locations.toDocument(Locations.DEFAULT, false));
 		setDefault("woolbattleTasks", new JsonDocument().append("tasks", new HashSet<String>()));
-		border = Border.GSON.fromJson(database.get("border").toJson(), Border.class);
+		try {
+			border = Border.GSON.fromJson(database.get("border").toJson(), Border.class);
+		} catch (Exception ex) {
+			border = new Border(Shape.CIRCLE, Double.MAX_VALUE, null, null);
+		}
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				border = Border.GSON.fromJson(database.get("border").toJson(), Border.class);
+				JsonDocument doc = database.get("border");
+				if (doc == null) {
+					return;
+				}
+				border = Border.GSON.fromJson(doc.toJson(), Border.class);
 			}
 		}.runTaskTimerAsynchronously(Lobby.getInstance(), 20 * 60 * 2, 20 * 60 * 2);
 	}

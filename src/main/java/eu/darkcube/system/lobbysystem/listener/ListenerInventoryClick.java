@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import eu.darkcube.system.lobbysystem.Lobby;
 import eu.darkcube.system.lobbysystem.inventory.InventorySettings;
+import eu.darkcube.system.lobbysystem.inventory.InventoryWoolBattle;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.Inventory;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.PagedInventory;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.PagedInventoryOld;
@@ -49,17 +50,12 @@ public class ListenerInventoryClick extends BaseListener {
 			i %= Language.values().length;
 			language = Language.values()[i];
 			user.setLanguage(language);
-			boolean old = user.isAnimations();
-			user.setAnimations(false);
 			boolean oldS = user.isSounds();
 			user.setSounds(false);
 			ListenerSettingsJoin.instance.handle(new PlayerJoinEvent(p, "NoSpawnTeleport"));
-			user.openInventoryExecute = false;
 			user.setOpenInventory(new InventorySettings(user));
-			user.openInventoryExecute = true;
 			p.setFlying(true);
 			user.setSounds(oldS);
-			user.setAnimations(old);
 		}
 		if (itemid == null || itemid.isEmpty()) {
 			return;
@@ -68,7 +64,8 @@ public class ListenerInventoryClick extends BaseListener {
 		if (itemid.equals(Item.INVENTORY_COMPASS_SPAWN.getItemId())) {
 			user.teleport(Lobby.getInstance().getDataManager().getSpawn());
 			close = true;
-		} else if (itemid.equals(Item.INVENTORY_COMPASS_WOOLBATTLE.getItemId())) {
+		} else if (itemid.equals(Item.INVENTORY_COMPASS_WOOLBATTLE.getItemId())
+				&& !(user.getOpenInventory() instanceof InventoryWoolBattle)) {
 			user.teleport(Lobby.getInstance().getDataManager().getWoolBattleSpawn());
 			close = true;
 		} else if (itemid.equals(Item.INVENTORY_SETTINGS_ANIMATIONS_ON.getItemId())) {
@@ -79,16 +76,10 @@ public class ListenerInventoryClick extends BaseListener {
 			user.setOpenInventory(new InventorySettings(user));
 		} else if (itemid.equals(Item.INVENTORY_SETTINGS_SOUNDS_ON.getItemId())) {
 			user.setSounds(false);
-			boolean old = user.isAnimations();
-			user.setAnimations(false);
 			user.setOpenInventory(new InventorySettings(user));
-			user.setAnimations(old);
 		} else if (itemid.equals(Item.INVENTORY_SETTINGS_SOUNDS_OFF.getItemId())) {
 			user.setSounds(true);
-			boolean old = user.isAnimations();
-			user.setAnimations(false);
 			user.setOpenInventory(new InventorySettings(user));
-			user.setAnimations(old);
 		}
 
 		// PagedInventories
@@ -100,8 +91,8 @@ public class ListenerInventoryClick extends BaseListener {
 			} else if (itemid.equals(Item.PREV.getItemId())) {
 				pinv.setPage(user, pinv.getPage(user) - 1);
 			}
-		} else if(inv instanceof PagedInventory) {
-			PagedInventory pinv = (PagedInventory)inv;
+		} else if (inv instanceof PagedInventory) {
+			PagedInventory pinv = (PagedInventory) inv;
 			if (itemid.equals(Item.NEXT.getItemId())) {
 				pinv.setPage(user, pinv.getPage(user) + 1);
 			} else if (itemid.equals(Item.PREV.getItemId())) {
@@ -113,8 +104,8 @@ public class ListenerInventoryClick extends BaseListener {
 			if (itemid.equals(Item.INVENTORY_PSERVER_PRIVATE.getItemId())) {
 				user.setOpenInventory(new InventoryPServerOwn(user));
 			}
-		} else if(inv instanceof InventoryPServerOwn) {
-			if(itemid.equals(Item.INVENTORY_PSERVER_PUBLIC.getItemId())) {
+		} else if (inv instanceof InventoryPServerOwn) {
+			if (itemid.equals(Item.INVENTORY_PSERVER_PUBLIC.getItemId())) {
 				user.setOpenInventory(new InventoryPServer(user));
 			}
 		}

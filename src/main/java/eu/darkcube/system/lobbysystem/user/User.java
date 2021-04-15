@@ -63,7 +63,7 @@ public abstract class User {
 		lastDailyReward = 0;
 		rewardSlotsUsed = null;
 	}
-	
+
 	public PServerUserSlots getSlots() {
 		return slots;
 	}
@@ -72,9 +72,12 @@ public abstract class User {
 		return openInventory;
 	}
 
-	public boolean openInventoryExecute = true;
-
 	public User setOpenInventory(Inventory openInventory) {
+		boolean oldAnimations = this.isAnimations();
+		if (this.openInventory != null && openInventory.getClass().equals(this.openInventory.getClass())) {
+			setAnimations(false);
+		}
+
 		Player p = UUIDManager.getPlayerByUUID(getUniqueId());
 		if (p != null) {
 			Runnable r = new Runnable() {
@@ -105,6 +108,7 @@ public abstract class User {
 		} else {
 			this.openInventory = openInventory;
 		}
+		this.setAnimations(oldAnimations);
 		return this;
 	}
 

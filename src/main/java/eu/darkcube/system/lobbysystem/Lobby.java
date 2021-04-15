@@ -107,22 +107,28 @@ public class Lobby extends Plugin {
 			@Override
 			public void run() {
 				for (String task : woolbattleTasks) {
-					Collection<ServiceInfoSnapshot> services = CloudNetDriver.getInstance().getCloudServiceProvider()
-							.getCloudServices(task);
-					int freeServices = 0;
-					for (ServiceInfoSnapshot service : services) {
-						GameState state =
-								GameState.fromString(service.getProperty(BridgeServiceProperty.STATE).orElse(null));
-						if (state == GameState.LOBBY || state == GameState.UNKNOWN) {
-							freeServices++;
-						}
-					}
 					if (CloudNetDriver.getInstance().getServiceTaskProvider().isServiceTaskPresent(task)) {
-						ServiceTask serviceTask = CloudNetDriver.getInstance().getServiceTaskProvider().getServiceTask(task);
+						ServiceTask serviceTask = CloudNetDriver.getInstance()
+								.getServiceTaskProvider()
+								.getServiceTask(task);
+						Collection<ServiceInfoSnapshot> services = CloudNetDriver.getInstance()
+								.getCloudServiceProvider()
+								.getCloudServices(serviceTask.getName());
+
+						int freeServices = 0;
+						for (ServiceInfoSnapshot service : services) {
+							GameState state = GameState
+									.fromString(service.getProperty(BridgeServiceProperty.STATE).orElse(null));
+							if (state == GameState.LOBBY || state == GameState.UNKNOWN) {
+								freeServices++;
+							}
+						}
 						if (freeServices < serviceTask.getMinServiceCount()) {
-							ServiceInfoSnapshot snap =
-									CloudNetDriver.getInstance().getCloudServiceFactory().createCloudService(serviceTask);
-							CloudNetDriver.getInstance().getCloudServiceProvider(snap)
+							ServiceInfoSnapshot snap = CloudNetDriver.getInstance()
+									.getCloudServiceFactory()
+									.createCloudService(serviceTask);
+							CloudNetDriver.getInstance()
+									.getCloudServiceProvider(snap)
 									.setCloudServiceLifeCycle(ServiceLifeCycle.RUNNING);
 						}
 					} else {
@@ -157,7 +163,9 @@ public class Lobby extends Plugin {
 		new ListenerGrapplingHook();
 		new ListenerBoostPlate();
 		new ListenerWeather();
-		new ListenerPServer();
+		if (PServerSupport.isSupported()) {
+			new ListenerPServer();
+		}
 		new ListenerPhysics();
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
@@ -167,14 +175,18 @@ public class Lobby extends Plugin {
 			user.setGadget(user.getGadget());
 		}
 		new ListenerBorder();
-		
-		SkullCache.register();
+
+		if (PServerSupport.isSupported()) {
+			SkullCache.register();
+		}
 
 	}
 
 	@Override
 	public void onDisable() {
-		SkullCache.unregister();
+		if (PServerSupport.isSupported()) {
+			SkullCache.unregister();
+		}
 		for (User user : new HashSet<>(UserWrapper.users.values())) {
 			getDataManager().setUserPos(user.getUniqueId(),
 					UUIDManager.getPlayerByUUID(user.getUniqueId()).getLocation());

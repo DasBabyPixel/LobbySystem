@@ -18,10 +18,6 @@ public abstract class Inventory {
 		};
 	}
 
-	public static void main(String[] args) {
-		System.out.println(dist(0, 3 * 9 - 1));
-	}
-
 	protected static int s(int r, int i) {
 		return (r - 1) * 9 + i - 1;
 	}

@@ -161,7 +161,7 @@ public abstract class PagedInventory extends Inventory {
 		private Map<Integer, ItemStack> fallbackItems = new HashMap<>();
 		private Map<Integer, ItemStack> staticItems = new HashMap<>();
 		private Map<Integer, ItemStack> pageItems = new HashMap<>();
-		private BukkitRunnable updater;
+		private Runnable updater;
 		private boolean updaterUpdate = false;
 		private boolean updaterUpdated = false;
 
@@ -169,7 +169,7 @@ public abstract class PagedInventory extends Inventory {
 			this.user = user;
 			this.animate = animate;
 
-			updater = new BukkitRunnable() {
+			updater = new Runnable() {
 
 				@Override
 				public void run() {

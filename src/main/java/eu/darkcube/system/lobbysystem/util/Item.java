@@ -23,19 +23,26 @@ public enum Item {
 
 	INVENTORY_GADGET(item(ENDER_CHEST)),
 
-	INVENTORY_LOBBY_SWITCHER(item(NETHER_STAR)), INVENTORY_LOBBY_SWITCHER_CURRENT(item(STORAGE_MINECART)),
+	INVENTORY_LOBBY_SWITCHER(item(NETHER_STAR)),
+	INVENTORY_LOBBY_SWITCHER_CURRENT(item(STORAGE_MINECART)),
 	INVENTORY_LOBBY_SWITCHER_OTHER(item(MINECART)),
 
-	INVENTORY_SETTINGS(item(REDSTONE_COMPARATOR)), INVENTORY_SETTINGS_ANIMATIONS_ON(item(BLAZE_POWDER)),
-	INVENTORY_SETTINGS_ANIMATIONS_OFF(item(BLAZE_POWDER)), INVENTORY_SETTINGS_SOUNDS_ON(item(GOLD_RECORD)),
+	INVENTORY_SETTINGS(item(REDSTONE_COMPARATOR)),
+	INVENTORY_SETTINGS_ANIMATIONS_ON(item(BLAZE_POWDER)),
+	INVENTORY_SETTINGS_ANIMATIONS_OFF(item(BLAZE_POWDER)),
+	INVENTORY_SETTINGS_SOUNDS_ON(item(GOLD_RECORD)),
 	INVENTORY_SETTINGS_SOUNDS_OFF(item(GOLD_RECORD)),
 
-	INVENTORY_COMPASS_SPAWN(item(NETHER_STAR)), INVENTORY_COMPASS_SMASH(item(FIREBALL)),
+	INVENTORY_COMPASS_SPAWN(item(NETHER_STAR)),
+	INVENTORY_COMPASS_SMASH(item(FIREBALL)),
 	INVENTORY_COMPASS_WOOLBATTLE(item(BOW)),
 	INVENTORY_COMPASS_MINERS(item(DIAMOND_PICKAXE).addFlag(ItemFlag.HIDE_ATTRIBUTES)),
 
-	GADGET_HOOK_ARROW(item(BOW).setUnbreakable(true).addFlag(ItemFlag.HIDE_UNBREAKABLE)
-			.addEnchant(Enchantment.ARROW_INFINITE, 1).addFlag(ItemFlag.HIDE_ENCHANTS)),
+	GADGET_HOOK_ARROW(
+			item(BOW).setUnbreakable(true)
+					.addFlag(ItemFlag.HIDE_UNBREAKABLE)
+					.addEnchant(Enchantment.ARROW_INFINITE, 1)
+					.addFlag(ItemFlag.HIDE_ENCHANTS)),
 	GADGET_HOOK_ARROW_ARROW(item(ARROW)),
 
 	GADGET_GRAPPLING_HOOK(item(FISHING_ROD).setUnbreakable(true).addFlag(ItemFlag.HIDE_UNBREAKABLE)),
@@ -55,8 +62,12 @@ public enum Item {
 	PREV(item(ARROW)),
 	PSERVER_OWN_MENU(item(COMMAND)),
 	INVENTORY_PSERVER(item(COMMAND)),
-
+	GAMESERVER_SELECTION_WOOLBATTLE(item(BOW)),
+	PSERVER_NEW_SLOT(item(COMMAND)),
 	PSERVER_SLOT(item(STAINED_GLASS_PANE).setDurability((short) 5)),
+	WORLD_PSERVER(item(GRASS)),
+	GAME_PSERVER(item(DIAMOND_SWORD)),
+	GAMESERVER_WOOLBATTLE(item(BOW)),
 
 	LOADING(item(BARRIER)),
 
@@ -155,8 +166,10 @@ public enum Item {
 		if (builder.getLores().size() != 0) {
 			builder.getLores().clear();
 			String last = null;
-			for (String lore : Message.getMessage(Message.PREFIX_ITEM + Message.PREFIX_LORE + item.name(),
-					user.getLanguage(), loreReplacements).split("\\%n")) {
+			for (String lore : Message
+					.getMessage(Message.PREFIX_ITEM + Message.PREFIX_LORE + item.name(), user.getLanguage(),
+							loreReplacements)
+					.split("\\%n")) {
 				if (last != null) {
 					lore = ChatColor.getLastColors(last) + lore;
 				}
@@ -179,6 +192,10 @@ public enum Item {
 		return getNBTValue(new ItemBuilder(item), "itemId");
 	}
 
+	public static ItemBuilder setItemId(ItemBuilder b, String itemId) {
+		return b.getUnsafe().setString("itemId", itemId).builder();
+	}
+
 	private static String getNBTValue(ItemBuilder builder, String key) {
 		return builder.getUnsafe().getString(key);
 	}
@@ -195,4 +212,5 @@ public enum Item {
 		}
 		return null;
 	}
+
 }
