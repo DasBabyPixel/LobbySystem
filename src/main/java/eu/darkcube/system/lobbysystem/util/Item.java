@@ -47,9 +47,9 @@ public enum Item {
 
 	GADGET_GRAPPLING_HOOK(item(FISHING_ROD).setUnbreakable(true).addFlag(ItemFlag.HIDE_UNBREAKABLE)),
 
-	LIGHT_GRAY_GLASS_PANE(item(STAINED_GLASS_PANE).setDurability((short) 7)),
-	DARK_GRAY_GLASS_PANE(item(STAINED_GLASS_PANE).setDurability((short) 15)),
-	LIME_GLASS_PANE(item(STAINED_GLASS_PANE).setDurability((short) 5)),
+	LIGHT_GRAY_GLASS_PANE(item(STAINED_GLASS_PANE).setDurability(7)),
+	DARK_GRAY_GLASS_PANE(item(STAINED_GLASS_PANE).setDurability(15)),
+	LIME_GLASS_PANE(item(STAINED_GLASS_PANE).setDurability(5)),
 
 	INVENTORY_PSERVER_PUBLIC(item(PAPER)),
 	INVENTORY_PSERVER_PRIVATE(item(COMMAND)),
@@ -64,10 +64,14 @@ public enum Item {
 	INVENTORY_PSERVER(item(COMMAND)),
 	GAMESERVER_SELECTION_WOOLBATTLE(item(BOW)),
 	PSERVER_NEW_SLOT(item(COMMAND)),
-	PSERVER_SLOT(item(STAINED_GLASS_PANE).setDurability((short) 5)),
+	PSERVER_SLOT(item(STAINED_GLASS_PANE).setDurability(5)),
 	WORLD_PSERVER(item(GRASS)),
 	GAME_PSERVER(item(DIAMOND_SWORD)),
 	GAMESERVER_WOOLBATTLE(item(BOW)),
+	PSERVER_DELETE(item(BARRIER)),
+	CONFIRM(item(INK_SACK).setDurability(10)),
+	CANCEL(item(INK_SACK).setDurability(1)),
+	START_PSERVER(item(INK_SACK).setDurability(2)),
 
 	LOADING(item(BARRIER)),
 

@@ -8,26 +8,30 @@ import org.bukkit.inventory.ItemStack;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.DefaultPagedInventory;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.InventoryType;
 import eu.darkcube.system.lobbysystem.pserver.PServerDataManager;
-import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlot;
+import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlots.PServerUserSlot;
 import eu.darkcube.system.lobbysystem.user.User;
+import eu.darkcube.system.lobbysystem.util.Item;
+import eu.darkcube.system.lobbysystem.util.ItemBuilder;
 
 public class InventoryPServerConfiguration extends DefaultPagedInventory {
 
 	public final PServerUserSlot psslot;
 
 	public InventoryPServerConfiguration(User user, PServerUserSlot psslot) {
-		super(PServerDataManager.getDisplayItem(user, psslot).getDisplayname(), InventoryType.PSERVER_CONFIGURATION);
+		super(getDisplayName(user, psslot), InventoryType.PSERVER_CONFIGURATION);
 		this.psslot = psslot;
+	}
+
+	private static String getDisplayName(User user, PServerUserSlot psslot) {
+		ItemBuilder item = PServerDataManager.getDisplayItem(user, psslot);
+		return item == null ? null : item.getDisplayname();
 	}
 
 	@Override
 	protected Map<Integer, ItemStack> contents(User user) {
 		Map<Integer, ItemStack> m = new HashMap<>();
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException ex) {
-			ex.printStackTrace();
-		}
+		m.put(15, Item.PSERVER_DELETE.getItem(user));
+		m.put(19, Item.START_PSERVER.getItem(user));
 		return m;
 	}
 

@@ -248,7 +248,6 @@ public abstract class PagedInventoryOld extends Inventory {
 					newItems.put(slot, c.get(slot));
 				}
 			}
-//			System.out.println(usedSlots.contains(52));
 			for (int slot : new HashSet<>(usedSlots)) {
 				if (!newItems.containsKey(slot)) {
 					if (oldItems.containsKey(slot)) {

@@ -13,7 +13,7 @@ import com.google.gson.JsonObject;
 import de.dytanic.cloudnet.driver.service.ServiceTask;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.DefaultPagedInventory;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.InventoryType;
-import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlot;
+import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlots.PServerUserSlot;
 import eu.darkcube.system.lobbysystem.user.User;
 import eu.darkcube.system.lobbysystem.util.Item;
 import eu.darkcube.system.lobbysystem.util.ItemBuilder;
@@ -66,8 +66,8 @@ public abstract class InventoryGameServerSelection extends DefaultPagedInventory
 			b.setMeta(null);
 			b.getUnsafe().setString(GAMESERVER_META_KEY, data.toString());
 			Item.setItemId(b, ITEMID);
+			m.put(itemSort[slot % itemSort.length] + itemSort.length * (slot / itemSort.length), b.build());
 			slot++;
-			m.put(itemSort[slot % itemSort.length] + itemSort.length * slot / itemSort.length, b.build());
 		}
 		return m;
 	}

@@ -28,6 +28,7 @@ import eu.darkcube.system.lobbysystem.npc.WoolBattleNPC;
 import eu.darkcube.system.lobbysystem.pserver.PServerSupport;
 import eu.darkcube.system.lobbysystem.user.User;
 import eu.darkcube.system.lobbysystem.user.UserWrapper;
+import eu.darkcube.system.lobbysystem.util.AsyncExecutor;
 import eu.darkcube.system.lobbysystem.util.DataManager;
 import eu.darkcube.system.lobbysystem.util.DependencyManager;
 import eu.darkcube.system.lobbysystem.util.Item;
@@ -179,11 +180,16 @@ public class Lobby extends Plugin {
 		if (PServerSupport.isSupported()) {
 			SkullCache.register();
 		}
+		
+		AsyncExecutor.start();
 
 	}
 
 	@Override
 	public void onDisable() {
+		
+		AsyncExecutor.shutdown();
+		
 		if (PServerSupport.isSupported()) {
 			SkullCache.unregister();
 		}

@@ -14,9 +14,9 @@ import eu.darkcube.system.lobbysystem.util.Item;
 
 public abstract class DefaultPagedInventory extends PagedInventory {
 
-	protected Map<User, Map<Integer, ItemStack>> contents = new HashMap<>();
-	protected Collection<User> toRemove = new ArrayList<>();
-	protected Object lock = new Object();
+	protected volatile Map<User, Map<Integer, ItemStack>> contents = new HashMap<>();
+	protected volatile Collection<User> toRemove = new ArrayList<>();
+	protected final Object lock = new Object();
 
 	public DefaultPagedInventory(String title, InventoryType type) {
 		super(title, 6 * 9, type);

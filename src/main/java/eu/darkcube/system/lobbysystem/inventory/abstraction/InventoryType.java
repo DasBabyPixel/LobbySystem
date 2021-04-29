@@ -2,6 +2,7 @@ package eu.darkcube.system.lobbysystem.inventory.abstraction;
 
 public enum InventoryType {
 
+	LOADING,
 	PLAYER,
 	COMPASS,
 	LOBBY_SWITCHER,
@@ -15,5 +16,6 @@ public enum InventoryType {
 	GAMESERVER_SELECTION_WOOLBATTLE,
 	GAMESERVER_SELECTION,
 	PSERVER_CONFIGURATION,
+	CONFIRM,
 
 }

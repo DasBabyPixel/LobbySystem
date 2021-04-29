@@ -10,8 +10,8 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.DefaultPagedInventory;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.InventoryType;
 import eu.darkcube.system.lobbysystem.pserver.PServerDataManager;
-import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlot;
 import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlots;
+import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlots.PServerUserSlot;
 import eu.darkcube.system.lobbysystem.user.User;
 import eu.darkcube.system.lobbysystem.util.Item;
 import eu.darkcube.system.lobbysystem.util.ItemBuilder;
@@ -19,8 +19,9 @@ import eu.darkcube.system.lobbysystem.util.UUIDManager;
 
 public class InventoryPServerOwn extends DefaultPagedInventory {
 
-	public static final String META_KEY_SLOT = "lobbysystem.pserver.slot";
+	public static final String META_KEY_SLOT = "lobbysystem.pserver.own.slot";
 	private static final String PSERVER_COUNT_PERMISSION = "pserver.own.count.";
+	public static final String ITEMID_EXISTING = "InventoryPServerOwnPServerSlotExisting";
 
 	public InventoryPServerOwn(User user) {
 		super(Item.PSERVER_OWN_MENU.getDisplayName(user), Item.PSERVER_OWN_MENU, InventoryType.PSERVER_OWN,
@@ -54,14 +55,13 @@ public class InventoryPServerOwn extends DefaultPagedInventory {
 
 			if (item == null) {
 				item = new ItemBuilder(Item.INVENTORY_PSERVER_SLOT_EMPTY.getItem(user));
+				item.setMeta(null);
+			} else {
+				item.build();
+				item.setMeta(null);
+				Item.setItemId(item, ITEMID_EXISTING);
 			}
 
-//			if (!pslot.isUsed()) {
-//				item = new ItemBuilder(Item.INVENTORY_PSERVER_SLOT_EMPTY.getItem(user));
-//			} else {
-//				item = new ItemBuilder(Item.PSERVER_SLOT.getItem(user, Integer.toString(slot + 1)));
-//			}
-			item.setMeta(null);
 			ItemBuilder.Unsafe unsafe = item.getUnsafe();
 			unsafe.setInt(META_KEY_SLOT, slot);
 

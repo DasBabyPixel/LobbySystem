@@ -152,18 +152,19 @@ public abstract class PagedInventory extends Inventory {
 	}
 
 	public class InventoryManager extends BukkitRunnable {
+		public boolean playSound = true;
 		public final User user;
-		private boolean animate = false;
-		private boolean updateRequired = false;
-		private int ticksOpen = -2;
-		private Set<ArrowType> enabled = new HashSet<>();
+		public boolean animate = false;
+		public boolean updateRequired = false;
+		public int ticksOpen = -2;
+		public Set<ArrowType> enabled = new HashSet<>();
 		public Map<ArrowType, Integer[]> arrowSlots = new HashMap<>();
-		private Map<Integer, ItemStack> fallbackItems = new HashMap<>();
-		private Map<Integer, ItemStack> staticItems = new HashMap<>();
-		private Map<Integer, ItemStack> pageItems = new HashMap<>();
-		private Runnable updater;
-		private boolean updaterUpdate = false;
-		private boolean updaterUpdated = false;
+		public Map<Integer, ItemStack> fallbackItems = new HashMap<>();
+		public Map<Integer, ItemStack> staticItems = new HashMap<>();
+		public Map<Integer, ItemStack> pageItems = new HashMap<>();
+		public Runnable updater;
+		public boolean updaterUpdate = false;
+		public boolean updaterUpdated = false;
 
 		private InventoryManager(User user, boolean animate) {
 			this.user = user;
@@ -291,7 +292,6 @@ public abstract class PagedInventory extends Inventory {
 
 		@Override
 		public void run() {
-			updater.run();
 			if (user.getOpenInventory() != PagedInventory.this && ticksOpen > 0) {
 				cancel();
 				return;
@@ -301,7 +301,7 @@ public abstract class PagedInventory extends Inventory {
 				onOpen(user);
 				insertDefaultItems(this);
 				updateInSync();
-				if (!animate) {
+				if (!animate && playSound) {
 					user.playSound(Sound.NOTE_STICKS, 1, 1);
 				}
 			}
@@ -310,6 +310,7 @@ public abstract class PagedInventory extends Inventory {
 				updateRequired = false;
 				updaterUpdated = false;
 				updaterUpdate = true;
+				updater.run();
 //				updateInSync();
 			}
 			if (updaterUpdated) {
@@ -317,7 +318,7 @@ public abstract class PagedInventory extends Inventory {
 				updateInSync();
 			} else if (ticksOpen <= maxTotalSort) {
 				updateInSync();
-				if (animate) {
+				if (animate && playSound) {
 					user.playSound(Sound.NOTE_STICKS, 1, 1);
 				}
 			}
@@ -393,7 +394,6 @@ public abstract class PagedInventory extends Inventory {
 		}
 
 		public ItemStack getItemUnsafe(int slot) {
-//			System.out.println(enabled);
 			if (Arrays.asList(arrowSlots.getOrDefault(ArrowType.PREV, new Integer[0])).contains(slot)
 					&& enabled.contains(ArrowType.PREV)) {
 				return getLeftArrowItem();

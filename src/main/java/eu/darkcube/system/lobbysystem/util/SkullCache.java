@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import de.dytanic.cloudnet.driver.CloudNetDriver;
 import de.dytanic.cloudnet.driver.event.EventListener;
+import de.dytanic.cloudnet.ext.bridge.player.ICloudOfflinePlayer;
 import de.dytanic.cloudnet.ext.bridge.player.IPlayerManager;
 import eu.darkcube.system.pserver.common.PServer;
 import eu.darkcube.system.pserver.common.PServerProvider;
@@ -62,65 +64,60 @@ public class SkullCache {
 
 	@EventListener
 	public void handle(PServerAddEvent e) {
-		IPlayerManager pm = CloudNetDriver.getInstance().getServicesRegistry().getFirstService(IPlayerManager.class);
-		for (UUID owner : e.getPServer().getOwners()) {
-			loadToCache(owner, pm.getOfflinePlayer(owner).getName());
-		}
+		AsyncExecutor.service().submit(() -> {
+			IPlayerManager pm = CloudNetDriver.getInstance()
+					.getServicesRegistry()
+					.getFirstService(IPlayerManager.class);
+			for (UUID owner : e.getPServer().getOwners()) {
+				loadToCache(owner, pm.getOfflinePlayer(owner).getName());
+			}
+		});
 	}
 
 	@EventListener
 	public void handle(PServerRemoveEvent e) {
-		Set<UUID> uuids = new HashSet<>();
-		PServerProvider.getInstance()
-				.getPServers()
-				.stream()
-				.filter(ps -> ps != e.getPServer())
-				.map(PServer::getOwners)
-				.forEach(uuids::addAll);
-		for (UUID owner : e.getPServer().getOwners()) {
-			if (!uuids.contains(owner)) {
-				unloadFromCache(owner);
+		System.out.println("PServer remove");
+		AsyncExecutor.service().submit(() -> {
+			Set<UUID> uuids = new HashSet<>();
+			PServerProvider.getInstance()
+					.getPServers()
+					.stream()
+					.filter(ps -> ps != e.getPServer())
+					.map(PServer::getOwners)
+					.forEach(uuids::addAll);
+			for (UUID owner : e.getPServer().getOwners()) {
+				if (!uuids.contains(owner)) {
+					unloadFromCache(owner);
+				}
 			}
-		}
+		});
 	}
 
 	@EventListener
 	public void handle(PServerAddOwnerEvent e) {
-		loadToCache(e.getOwner(),
-				CloudNetDriver.getInstance()
-						.getServicesRegistry()
-						.getFirstService(IPlayerManager.class)
-						.getOfflinePlayer(e.getOwner())
-						.getName());
+		AsyncExecutor.service().submit(() -> {
+			ICloudOfflinePlayer offp = CloudNetDriver.getInstance()
+					.getServicesRegistry()
+					.getFirstService(IPlayerManager.class)
+					.getOfflinePlayer(e.getOwner());
+			String name = offp != null ? offp.getName() : Bukkit.getOfflinePlayer(e.getOwner()).getName();
+			loadToCache(e.getOwner(), name);
+		});
 	}
 
 	@EventListener
 	public void handle(PServerRemoveOwnerEvent e) {
-		Set<UUID> uuids = new HashSet<>();
-		PServerProvider.getInstance()
-				.getPServers()
-				.stream()
-				.filter(ps -> ps != e.getPServer())
-				.map(PServer::getOwners)
-				.forEach(uuids::addAll);
-		if (!uuids.contains(e.getOwner())) {
-			unloadFromCache(e.getOwner());
-		} else {
-			System.out.println("[PServer] [SkullCache] Not unloading user");
-		}
+		AsyncExecutor.service().submit(() -> {
+			Set<UUID> uuids = new HashSet<>();
+			PServerProvider.getInstance()
+					.getPServers()
+					.stream()
+					.filter(ps -> ps != e.getPServer())
+					.map(PServer::getOwners)
+					.forEach(uuids::addAll);
+			if (!uuids.contains(e.getOwner())) {
+				unloadFromCache(e.getOwner());
+			}
+		});
 	}
-
-	/*
-	 * @EventListener public void handle(PServerUpdateEvent e) { IPlayerManager pm =
-	 * CloudNetDriver.getInstance().getServicesRegistry().getFirstService(
-	 * IPlayerManager.class); for (UUID owner : e.getPServer().getOwners()) {
-	 * loadToCache(owner, pm.getOfflinePlayer(owner).getName()); } }
-	 * 
-	 * @EventListener public void handle(PServerRemoveEvent e) { PServer ps =
-	 * e.getPServer(); Set<UUID> uuids = new HashSet<>();
-	 * PServerProvider.getInstance().getPServers().forEach(pss -> { if (pss != ps) {
-	 * uuids.addAll(pss.getOwners()); } }); System.out.println(uuids); for (UUID
-	 * owner : ps.getOwners()) { System.out.println(owner); if
-	 * (!uuids.contains(owner)) { unloadFromCache(owner); } } }
-	 */
 }

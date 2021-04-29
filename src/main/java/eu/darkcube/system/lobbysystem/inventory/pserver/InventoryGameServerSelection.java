@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 import eu.darkcube.system.lobbysystem.inventory.abstraction.DefaultPagedInventory;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.InventoryType;
-import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlot;
+import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlots.PServerUserSlot;
 import eu.darkcube.system.lobbysystem.user.User;
 import eu.darkcube.system.lobbysystem.util.Item;
 

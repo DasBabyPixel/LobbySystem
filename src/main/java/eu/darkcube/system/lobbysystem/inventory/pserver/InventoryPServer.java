@@ -10,7 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.inventory.ItemStack;
 
-import de.dytanic.cloudnet.driver.CloudNetDriver;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.DefaultPagedInventory;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.InventoryType;
 import eu.darkcube.system.lobbysystem.pserver.PServerDataManager;
@@ -48,8 +47,7 @@ public class InventoryPServer extends DefaultPagedInventory {
 			boolean skull = false;
 
 			if (ps.isGamemode()) {
-				b = PServerDataManager.getDisplayItemGamemode(user,
-						CloudNetDriver.getInstance().getServiceTaskProvider().getServiceTask(ps.getTaskName()));
+				b = PServerDataManager.getDisplayItemGamemode(user, ps.getTaskName());
 			}
 			if (b == null) {
 				b = new ItemBuilder(owner == null ? Material.BARRIER : Material.SKULL_ITEM)

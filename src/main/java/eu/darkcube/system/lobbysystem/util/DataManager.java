@@ -20,9 +20,10 @@ import eu.darkcube.system.lobbysystem.util.Border.Shape;
 
 public class DataManager {
 
-	private Database database;
-	private Database databaseUserpos;
-	private Border border;
+	private volatile Database database;
+	private volatile Database databaseUserpos;
+	private volatile Border border;
+	private volatile Set<String> woolbattleTasks;
 
 	public DataManager() {
 		database = CloudNetDriver.getInstance().getDatabaseProvider().getDatabase("lobbysystem_data");
@@ -38,6 +39,7 @@ public class DataManager {
 		} catch (Exception ex) {
 			border = new Border(Shape.CIRCLE, Double.MAX_VALUE, null, null);
 		}
+		fetchWoolBattleTasks();
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -46,6 +48,7 @@ public class DataManager {
 					return;
 				}
 				border = Border.GSON.fromJson(doc.toJson(), Border.class);
+				fetchWoolBattleTasks();
 			}
 		}.runTaskTimerAsynchronously(Lobby.getInstance(), 20 * 60 * 2, 20 * 60 * 2);
 	}
@@ -86,10 +89,14 @@ public class DataManager {
 		return p;
 	}
 
-	public Set<String> getWoolBattleTasks() {
-		return database.get("woolbattleTasks").get("tasks", new TypeToken<Set<String>>() {
+	public void fetchWoolBattleTasks() {
+		woolbattleTasks = database.get("woolbattleTasks").get("tasks", new TypeToken<Set<String>>() {
 			private static final long serialVersionUID = 1461778882147270573L;
 		}.getType());
+	}
+
+	public Set<String> getWoolBattleTasks() {
+		return woolbattleTasks;
 	}
 
 	public DataManager setWoolBattleTasks(Set<String> tasks) {

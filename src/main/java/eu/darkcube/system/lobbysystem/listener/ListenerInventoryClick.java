@@ -7,6 +7,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
 import eu.darkcube.system.lobbysystem.Lobby;
+import eu.darkcube.system.lobbysystem.inventory.InventoryConfirm;
 import eu.darkcube.system.lobbysystem.inventory.InventorySettings;
 import eu.darkcube.system.lobbysystem.inventory.InventoryWoolBattle;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.Inventory;
@@ -97,6 +98,15 @@ public class ListenerInventoryClick extends BaseListener {
 				pinv.setPage(user, pinv.getPage(user) + 1);
 			} else if (itemid.equals(Item.PREV.getItemId())) {
 				pinv.setPage(user, pinv.getPage(user) - 1);
+			}
+		}
+		
+		if (inv instanceof InventoryConfirm) {
+			InventoryConfirm cinv = (InventoryConfirm) inv;
+			if (itemid.equals(Item.CONFIRM.getItemId())) {
+				cinv.onConfirm.run();
+			} else if (itemid.equals(Item.CANCEL.getItemId())) {
+				cinv.onCancel.run();
 			}
 		}
 
