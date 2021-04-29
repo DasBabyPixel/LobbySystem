@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
@@ -68,10 +70,17 @@ public enum Item {
 	WORLD_PSERVER(item(GRASS)),
 	GAME_PSERVER(item(DIAMOND_SWORD)),
 	GAMESERVER_WOOLBATTLE(item(BOW)),
-	PSERVER_DELETE(item(BARRIER)),
+	PSERVER_DELETE(item(TNT).addLore()),
 	CONFIRM(item(INK_SACK).setDurability(10)),
 	CANCEL(item(INK_SACK).setDurability(1)),
 	START_PSERVER(item(INK_SACK).setDurability(2)),
+	STOP_PSERVER(item(INK_SACK).setDurability(1)),
+	PSERVER_PUBLIC(item(FIREWORK_CHARGE)
+			.addFireworkEffect(FireworkEffect.builder().withColor(Color.fromRGB(255, 255, 255)).build())
+			.addFlag(ItemFlag.HIDE_POTION_EFFECTS)),
+	PSERVER_PRIVATE(item(FIREWORK_CHARGE)
+			.addFireworkEffect(FireworkEffect.builder().withColor(Color.fromRGB(255, 0, 0)).build())
+			.addFlag(ItemFlag.HIDE_POTION_EFFECTS)),
 
 	LOADING(item(BARRIER)),
 

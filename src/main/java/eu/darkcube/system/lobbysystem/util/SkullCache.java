@@ -76,7 +76,6 @@ public class SkullCache {
 
 	@EventListener
 	public void handle(PServerRemoveEvent e) {
-		System.out.println("PServer remove");
 		AsyncExecutor.service().submit(() -> {
 			Set<UUID> uuids = new HashSet<>();
 			PServerProvider.getInstance()

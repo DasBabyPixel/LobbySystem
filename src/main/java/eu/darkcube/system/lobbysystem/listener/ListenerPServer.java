@@ -59,6 +59,17 @@ public class ListenerPServer extends BaseListener {
 				PServerUserSlot psslot = user.getSlots().getSlot(slot);
 				user.setOpenInventory(new InventoryPServerConfiguration(user, psslot));
 			}
+		} else if (inv instanceof InventoryPServer) {
+			InventoryPServer cinv = (InventoryPServer) inv;
+			if (itemid.equals(InventoryPServer.ITEMID)) {
+				String psid = itemb.getUnsafe().getString(InventoryPServer.META_KEY_PSERVER);
+				PServer ps = PServerProvider.getInstance().getPServer(new UniqueId(psid));
+				if (ps == null) {
+					cinv.recalculate(user);
+					return;
+				}
+				ps.connectPlayer(user.getUniqueId());
+			}
 		} else if (inv instanceof InventoryNewPServerSlot) {
 			InventoryNewPServerSlot cinv = (InventoryNewPServerSlot) inv;
 			if (itemid.equals(Item.GAME_PSERVER.getItemId())) {
@@ -121,15 +132,6 @@ public class ListenerPServer extends BaseListener {
 				}));
 
 			}
-		} else if (inv instanceof InventoryPServer) {
-			if (itemid.equals(InventoryPServer.ITEMID)) {
-				String psid = itemb.getUnsafe().getString(InventoryPServer.META_KEY_PSERVER);
-				PServer ps = PServerProvider.getInstance().getPServer(new UniqueId(psid));
-				if (ps == null) {
-					user.setOpenInventory(new InventoryPServer(user));
-					return;
-				}
-			}
 		} else if (inv instanceof InventoryPServerConfiguration) {
 			InventoryPServerConfiguration cinv = (InventoryPServerConfiguration) inv;
 			if (itemid.equals(Item.PSERVER_DELETE.getItemId())) {
@@ -142,6 +144,33 @@ public class ListenerPServer extends BaseListener {
 			} else if (itemid.equals(Item.START_PSERVER.getItemId())) {
 				AsyncExecutor.service().submit(() -> {
 					cinv.psslot.startPServer();
+				});
+			} else if (itemid.equals(Item.STOP_PSERVER.getItemId())) {
+				AsyncExecutor.service().submit(() -> {
+					PServer ps = cinv.psslot.getPServer();
+					if (ps != null) {
+						ps.stop();
+					}
+				});
+			} else if (itemid.equals(Item.PSERVER_PUBLIC.getItemId())) {
+				AsyncExecutor.service().submit(() -> {
+					cinv.psslot.getData().addProperty("private", true);
+					cinv.psslot.setChanged();
+					PServer ps = cinv.psslot.getPServer();
+					if (ps != null) {
+						ps.setPrivate(true);
+					}
+					cinv.recalculateAll();
+				});
+			} else if (itemid.equals(Item.PSERVER_PRIVATE.getItemId())) {
+				AsyncExecutor.service().submit(() -> {
+					cinv.psslot.getData().addProperty("private", false);
+					cinv.psslot.setChanged();
+					PServer ps = cinv.psslot.getPServer();
+					if (ps != null) {
+						ps.setPrivate(false);
+					}
+					cinv.recalculateAll();
 				});
 			}
 		}

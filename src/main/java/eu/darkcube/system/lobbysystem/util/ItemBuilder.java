@@ -7,12 +7,15 @@ import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkEffectMeta;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
@@ -55,6 +58,8 @@ public class ItemBuilder {
 	private List<String> lore = new ArrayList<>();
 
 	private List<ItemFlag> flags = new ArrayList<>();
+
+	private List<FireworkEffect> fireworkEffects = new ArrayList<>();
 
 	private boolean andSymbol = true;
 
@@ -163,29 +168,30 @@ public class ItemBuilder {
 
 		this.enchantments = new HashMap<>(item.getEnchantments());
 
-		if (item.hasItemMeta())
+		if (item.hasItemMeta()) {
+			ItemMeta meta = item.getItemMeta();
 
-			this.displayname = item.getItemMeta().getDisplayName();
-
-		if (this.displayname == null)
-
-			this.displayname = "";
-
-		if (item.hasItemMeta())
-
-			this.lore = item.getItemMeta().getLore();
-
-		if (this.lore == null)
-
-			this.lore = new ArrayList<>();
-
-		if (item.hasItemMeta())
+			this.displayname = meta.getDisplayName();
+			this.lore = meta.getLore();
 
 			for (ItemFlag f : item.getItemMeta().getItemFlags()) {
-
 				flags.add(f);
-
 			}
+
+			if (meta instanceof FireworkEffectMeta) {
+				this.fireworkEffects.add(((FireworkEffectMeta) meta).getEffect());
+			}
+			if (meta instanceof FireworkMeta) {
+				this.fireworkEffects.addAll(((FireworkMeta) meta).getEffects());
+			}
+
+		}
+
+		if (this.displayname == null)
+			this.displayname = "";
+
+		if (this.lore == null)
+			this.lore = new ArrayList<>();
 
 	}
 
@@ -232,6 +238,9 @@ public class ItemBuilder {
 		this.unbreakable = builder.unbreakable;
 
 		this.displayname = builder.displayname;
+
+		this.fireworkEffects = new ArrayList<>(
+				builder.fireworkEffects != null ? builder.fireworkEffects : new ArrayList<>());
 
 		this.lore = new ArrayList<>(builder.lore != null ? builder.lore : new ArrayList<>());
 
@@ -785,6 +794,11 @@ public class ItemBuilder {
 
 	}
 
+	public ItemBuilder addFireworkEffect(FireworkEffect effect) {
+		this.fireworkEffects.add(effect);
+		return this;
+	}
+
 	/** Returns the MaterialData */
 
 	public MaterialData getData() {
@@ -963,6 +977,11 @@ public class ItemBuilder {
 
 	/** Converts the ItemBuilder to a {@link org.bukkit.inventory.ItemStack} */
 
+	public ItemBuilder builderBuild() {
+		this.build();
+		return this;
+	}
+
 	public ItemStack build() {
 
 		item.setType(material);
@@ -986,25 +1005,29 @@ public class ItemBuilder {
 		}
 
 		if (displayname != null) {
-
 			meta.setDisplayName(displayname);
-
 		}
 
 		if (lore.size() > 0) {
-
 			meta.setLore(lore);
-
 		}
 
 		if (flags.size() > 0) {
-
 			for (ItemFlag f : flags) {
-
 				meta.addItemFlags(f);
-
 			}
+		}
 
+		if (!this.fireworkEffects.isEmpty()) {
+			for (FireworkEffect effect : this.fireworkEffects) {
+				if (meta instanceof FireworkEffectMeta) {
+					((FireworkEffectMeta) meta).setEffect(effect);
+					break;
+				}
+				if (meta instanceof FireworkMeta) {
+					((FireworkMeta) meta).addEffect(effect);
+				}
+			}
 		}
 
 		item.setItemMeta(meta);

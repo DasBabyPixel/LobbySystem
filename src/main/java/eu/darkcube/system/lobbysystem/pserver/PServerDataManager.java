@@ -209,6 +209,10 @@ public class PServerDataManager {
 				return pserverId != null;
 			}
 
+			public void setChanged() {
+				this.changed = true;
+			}
+
 		}
 	}
 

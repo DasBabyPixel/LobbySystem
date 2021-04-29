@@ -6,10 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import eu.darkcube.system.lobbysystem.Lobby;
 import eu.darkcube.system.lobbysystem.user.User;
+import eu.darkcube.system.lobbysystem.util.AsyncExecutor;
 import eu.darkcube.system.lobbysystem.util.Item;
 
 public abstract class DefaultPagedInventory extends PagedInventory {
@@ -44,6 +43,7 @@ public abstract class DefaultPagedInventory extends PagedInventory {
 
 	@Override
 	protected final void onClose(User user) {
+		this.onClose0(user);
 		synchronized (lock) {
 			if (contents.containsKey(user)) {
 				contents.remove(user);
@@ -52,25 +52,44 @@ public abstract class DefaultPagedInventory extends PagedInventory {
 			}
 		}
 	}
+	
+	/**
+	 * @param user  
+	 */
+	protected void onClose0(User user) {
+	}
 
 	protected abstract Map<Integer, ItemStack> contents(User user);
 
 	@Override
 	protected final void onOpen(User user) {
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				Map<Integer, ItemStack> m = contents(user);
-				synchronized (lock) {
-					if (toRemove.contains(user)) {
-						toRemove.remove(user);
-					} else {
-						contents.put(user, m);
-					}
+		AsyncExecutor.service().submit(() -> {
+			Map<Integer, ItemStack> m = contents(user);
+			synchronized (lock) {
+				if (toRemove.contains(user)) {
+					toRemove.remove(user);
+				} else {
+					contents.put(user, m);
 				}
-				update(user);
 			}
-		}.runTaskAsynchronously(Lobby.getInstance());
+			update(user);
+		});
+	}
+
+	public void recalculateAll() {
+		this.contents.keySet().forEach(this::recalculate);
+	}
+
+	public void recalculate(User user) {
+		AsyncExecutor.service().submit(() -> {
+			Map<Integer, ItemStack> m = contents(user);
+			synchronized (lock) {
+				if (contents.containsKey(user)) {
+					contents.put(user, m);
+				}
+			}
+			update(user);
+		});
 	}
 
 	@Override
