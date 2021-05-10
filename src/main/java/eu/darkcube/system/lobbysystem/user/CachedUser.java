@@ -5,10 +5,10 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
+import eu.darkcube.system.language.core.Language;
 import eu.darkcube.system.lobbysystem.gadget.Gadget;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.Inventory;
 import eu.darkcube.system.lobbysystem.util.Item;
-import eu.darkcube.system.lobbysystem.util.Language;
 import eu.darkcube.system.lobbysystem.util.UUIDManager;
 
 public class CachedUser extends User {

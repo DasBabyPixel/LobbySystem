@@ -1,15 +1,19 @@
 package eu.darkcube.system.lobbysystem.listener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import de.dytanic.cloudnet.driver.CloudNetDriver;
 import de.dytanic.cloudnet.driver.service.ServiceTask;
+import eu.darkcube.system.lobbysystem.Lobby;
+import eu.darkcube.system.lobbysystem.event.EventPServerMayJoin;
 import eu.darkcube.system.lobbysystem.inventory.InventoryConfirm;
 import eu.darkcube.system.lobbysystem.inventory.InventoryLoading;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.Inventory;
@@ -25,6 +29,7 @@ import eu.darkcube.system.lobbysystem.user.UserWrapper;
 import eu.darkcube.system.lobbysystem.util.AsyncExecutor;
 import eu.darkcube.system.lobbysystem.util.Item;
 import eu.darkcube.system.lobbysystem.util.ItemBuilder;
+import eu.darkcube.system.lobbysystem.util.Message;
 import eu.darkcube.system.pserver.common.PServer;
 import eu.darkcube.system.pserver.common.PServerProvider;
 import eu.darkcube.system.pserver.common.UniqueId;
@@ -68,7 +73,12 @@ public class ListenerPServer extends BaseListener {
 					cinv.recalculate(user);
 					return;
 				}
-				ps.connectPlayer(user.getUniqueId());
+				e.getWhoClicked().closeInventory();
+				if (mayJoin(user, ps)) {
+					ps.connectPlayer(user.getUniqueId());
+				} else {
+					e.getWhoClicked().sendMessage(Message.PSERVER_NOT_PUBLIC.getMessage(user));
+				}
 			}
 		} else if (inv instanceof InventoryNewPServerSlot) {
 			InventoryNewPServerSlot cinv = (InventoryNewPServerSlot) inv;
@@ -117,10 +127,6 @@ public class ListenerPServer extends BaseListener {
 					UniqueId uid = UniqueIdProvider.getInstance().newUniqueId();
 					cinv.psslot.load(uid);
 					PServerProvider.getInstance().addOwner(cinv.psslot.getPServerId(), user.getUniqueId());
-//					PServer ps = cinv.psslot.createPServer();
-
-//					ps.addOwner(e.getWhoClicked().getUniqueId());
-//					ps.remove();
 
 					try {
 						Thread.sleep(1000);
@@ -143,7 +149,14 @@ public class ListenerPServer extends BaseListener {
 				}));
 			} else if (itemid.equals(Item.START_PSERVER.getItemId())) {
 				AsyncExecutor.service().submit(() -> {
-					cinv.psslot.startPServer();
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							e.getWhoClicked().closeInventory();
+						}
+					}.runTask(Lobby.getInstance());
+					PServer ps = cinv.psslot.startPServer();
+					Lobby.getInstance().getPServerJoinOnStart().register(user, ps);
 				});
 			} else if (itemid.equals(Item.STOP_PSERVER.getItemId())) {
 				AsyncExecutor.service().submit(() -> {
@@ -174,5 +187,18 @@ public class ListenerPServer extends BaseListener {
 				});
 			}
 		}
+	}
+
+	public static boolean mayJoin(User user, PServer pserver) {
+		boolean mayjoin = false;
+		if (!pserver.isPrivate()) {
+			mayjoin = true;
+		}
+		if (pserver.getOwners().contains(user.getUniqueId())) {
+			mayjoin = true;
+		}
+		EventPServerMayJoin e = new EventPServerMayJoin(user, pserver, mayjoin);
+		Bukkit.getPluginManager().callEvent(e);
+		return e.mayJoin();
 	}
 }

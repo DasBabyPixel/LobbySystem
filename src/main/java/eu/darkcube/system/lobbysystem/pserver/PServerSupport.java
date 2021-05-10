@@ -33,7 +33,7 @@ public class PServerSupport {
 
 	private static class Register {
 		private static void register() {
-			eu.darkcube.system.pserver.wrapper.Main
+			eu.darkcube.system.pserver.wrapper.PServerWrapper
 					.setPServerCommand(new eu.darkcube.system.pserver.wrapper.command.PServerCommand() {
 						@Override
 						public boolean execute(CommandSender sender, String[] args) {

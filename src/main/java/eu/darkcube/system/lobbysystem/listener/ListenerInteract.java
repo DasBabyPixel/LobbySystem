@@ -10,7 +10,7 @@ import eu.darkcube.system.lobbysystem.inventory.InventoryCompass;
 import eu.darkcube.system.lobbysystem.inventory.InventoryGadget;
 import eu.darkcube.system.lobbysystem.inventory.InventoryLobbySwitcher;
 import eu.darkcube.system.lobbysystem.inventory.InventorySettings;
-import eu.darkcube.system.lobbysystem.inventory.pserver.InventoryPServer;
+import eu.darkcube.system.lobbysystem.inventory.pserver.InventoryPServerOwn;
 import eu.darkcube.system.lobbysystem.user.User;
 import eu.darkcube.system.lobbysystem.user.UserWrapper;
 import eu.darkcube.system.lobbysystem.util.Item;
@@ -45,7 +45,7 @@ public class ListenerInteract extends BaseListener {
 		} else if (itemid.equals(Item.INVENTORY_SETTINGS.getItemId())) {
 			user.setOpenInventory(new InventorySettings(user));
 		} else if (itemid.equals(Item.PSERVER_MAIN_ITEM.getItemId())) {
-			user.setOpenInventory(new InventoryPServer(user));
+			user.setOpenInventory(new InventoryPServerOwn(user));
 		}
 	}
 }

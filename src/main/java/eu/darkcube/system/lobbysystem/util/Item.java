@@ -38,16 +38,15 @@ public enum Item {
 	INVENTORY_COMPASS_SPAWN(item(NETHER_STAR)),
 	INVENTORY_COMPASS_SMASH(item(FIREBALL)),
 	INVENTORY_COMPASS_WOOLBATTLE(item(BOW)),
-	INVENTORY_COMPASS_MINERS(item(DIAMOND_PICKAXE).addFlag(ItemFlag.HIDE_ATTRIBUTES)),
+	INVENTORY_COMPASS_MINERS(
+					item(DIAMOND_PICKAXE).addFlag(ItemFlag.HIDE_ATTRIBUTES)),
 
 	GADGET_HOOK_ARROW(
-			item(BOW).setUnbreakable(true)
-					.addFlag(ItemFlag.HIDE_UNBREAKABLE)
-					.addEnchant(Enchantment.ARROW_INFINITE, 1)
-					.addFlag(ItemFlag.HIDE_ENCHANTS)),
+					item(BOW).setUnbreakable(true).addFlag(ItemFlag.HIDE_UNBREAKABLE).addEnchant(Enchantment.ARROW_INFINITE, 1).addFlag(ItemFlag.HIDE_ENCHANTS)),
 	GADGET_HOOK_ARROW_ARROW(item(ARROW)),
 
-	GADGET_GRAPPLING_HOOK(item(FISHING_ROD).setUnbreakable(true).addFlag(ItemFlag.HIDE_UNBREAKABLE)),
+	GADGET_GRAPPLING_HOOK(
+					item(FISHING_ROD).setUnbreakable(true).addFlag(ItemFlag.HIDE_UNBREAKABLE)),
 
 	LIGHT_GRAY_GLASS_PANE(item(STAINED_GLASS_PANE).setDurability(7)),
 	DARK_GRAY_GLASS_PANE(item(STAINED_GLASS_PANE).setDurability(15)),
@@ -57,7 +56,8 @@ public enum Item {
 	INVENTORY_PSERVER_PRIVATE(item(COMMAND)),
 
 	INVENTORY_PSERVER_SLOT_EMPTY(item(STONE_BUTTON)),
-	INVENTORY_PSERVER_SLOT_NOT_BOUGHT(item(FIREWORK_CHARGE).addFlag(ItemFlag.HIDE_POTION_EFFECTS)),
+	INVENTORY_PSERVER_SLOT_NOT_BOUGHT(
+					item(FIREWORK_CHARGE).addFlag(ItemFlag.HIDE_POTION_EFFECTS)),
 
 	PSERVER_MAIN_ITEM(item(COMMAND)),
 	NEXT(item(ARROW)),
@@ -75,18 +75,15 @@ public enum Item {
 	CANCEL(item(INK_SACK).setDurability(1)),
 	START_PSERVER(item(INK_SACK).setDurability(2)),
 	STOP_PSERVER(item(INK_SACK).setDurability(1)),
-	PSERVER_PUBLIC(item(FIREWORK_CHARGE)
-			.addFireworkEffect(FireworkEffect.builder().withColor(Color.fromRGB(255, 255, 255)).build())
-			.addFlag(ItemFlag.HIDE_POTION_EFFECTS)),
-	PSERVER_PRIVATE(item(FIREWORK_CHARGE)
-			.addFireworkEffect(FireworkEffect.builder().withColor(Color.fromRGB(255, 0, 0)).build())
-			.addFlag(ItemFlag.HIDE_POTION_EFFECTS)),
+	PSERVER_PUBLIC(item(FIREWORK_CHARGE).addFireworkEffect(FireworkEffect.builder().withColor(Color.fromRGB(255, 255, 255)).build()).addFlag(ItemFlag.HIDE_POTION_EFFECTS)),
+	PSERVER_PRIVATE(item(FIREWORK_CHARGE).addFireworkEffect(FireworkEffect.builder().withColor(Color.fromRGB(255, 0, 0)).build()).addFlag(ItemFlag.HIDE_POTION_EFFECTS)),
 
 	LOADING(item(BARRIER)),
 
 	;
 
 	private final ItemBuilder builder;
+	private final String key = name();
 
 	private Item(ItemBuilder builder) {
 		this.builder = builder;
@@ -97,10 +94,10 @@ public enum Item {
 	}
 
 	public String getDisplayName(User user) {
-		return getDisplayName(user, new String[0]);
+		return getDisplayName(user, new Object[0]);
 	}
 
-	public String getDisplayName(User user, String... replacements) {
+	public String getDisplayName(User user, Object... replacements) {
 		return getDisplayName(this, user, replacements);
 	}
 
@@ -108,11 +105,16 @@ public enum Item {
 		return getItem(this, user);
 	}
 
-	public ItemStack getItem(User user, String... replacements) {
+	public String getKey() {
+		return key;
+	}
+
+	public ItemStack getItem(User user, Object... replacements) {
 		return getItem(this, user, replacements);
 	}
 
-	public ItemStack getItem(User user, String[] replacements, String... loreReplacements) {
+	public ItemStack getItem(User user, String[] replacements,
+					Object... loreReplacements) {
 		return getItem(this, user, replacements, loreReplacements);
 	}
 
@@ -141,7 +143,8 @@ public enum Item {
 		return i - 1;
 	}
 
-	public static void removeItems(Inventory invToRemoveFrom, ItemStack itemToRemove, int count) {
+	public static void removeItems(Inventory invToRemoveFrom,
+					ItemStack itemToRemove, int count) {
 		for (int i = 0; i < count; i++)
 			invToRemoveFrom.removeItem(itemToRemove);
 	}
@@ -168,21 +171,23 @@ public enum Item {
 		return i - 1;
 	}
 
-	public static ItemStack getItem(Item item, User user, String... replacements) {
-		return getItem(item, user, replacements, new String[0]);
+	public static ItemStack getItem(Item item, User user,
+					Object... replacements) {
+		return getItem(item, user, replacements, new Object[0]);
 	}
 
-	public static ItemStack getItem(Item item, User user, String[] replacements, String... loreReplacements) {
+	public static ItemStack getItem(Item item, User user, Object[] replacements,
+					Object... loreReplacements) {
 		ItemBuilder builder = item.getBuilder().getUnsafe().setString("itemId", getItemId(item)).builder();
 		String name = getDisplayName(item, user, replacements);
 		builder.setDisplayName(name);
 		if (builder.getLores().size() != 0) {
 			builder.getLores().clear();
 			String last = null;
-			for (String lore : Message
-					.getMessage(Message.PREFIX_ITEM + Message.PREFIX_LORE + item.name(), user.getLanguage(),
-							loreReplacements)
-					.split("\\%n")) {
+			String fullLore = user.getLanguage().getMessage(Message.PREFIX_ITEM
+							+ Message.PREFIX_LORE
+							+ item.getKey(), loreReplacements);
+			for (String lore : fullLore.split("\\%n")) {
 				if (last != null) {
 					lore = ChatColor.getLastColors(last) + lore;
 				}
@@ -194,7 +199,7 @@ public enum Item {
 	}
 
 	public static String getItemId(Item item) {
-		return Message.PREFIX_ITEM + item.name();
+		return Message.PREFIX_ITEM + item.getKey();
 	}
 
 	public static String getLanguageId(ItemStack item) {
@@ -213,13 +218,15 @@ public enum Item {
 		return builder.getUnsafe().getString(key);
 	}
 
-	public static String getDisplayName(Item item, User user, String... replacements) {
+	public static String getDisplayName(Item item, User user,
+					Object... replacements) {
 		return Message.getMessage(getItemId(item), user.getLanguage(), replacements);
 	}
 
 	public static Item byGadget(Gadget gadget) {
 		for (Item item : values()) {
-			if (item.name().startsWith("GADGET_") && item.name().substring(7).equals(gadget.name())) {
+			if (item.getKey().startsWith("GADGET_")
+							&& item.getKey().substring(7).equals(gadget.name())) {
 				return item;
 			}
 		}

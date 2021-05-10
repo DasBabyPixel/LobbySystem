@@ -11,6 +11,7 @@ import eu.darkcube.system.lobbysystem.command.lobbysystem.CommandMinigame;
 import eu.darkcube.system.lobbysystem.command.lobbysystem.CommandNPC;
 import eu.darkcube.system.lobbysystem.command.lobbysystem.CommandSetCubes;
 import eu.darkcube.system.lobbysystem.command.lobbysystem.CommandSetSpawn;
+import eu.darkcube.system.lobbysystem.command.lobbysystem.CommandShowSkullCache;
 
 public class CommandLobbysystem extends Command {
 
@@ -22,7 +23,8 @@ public class CommandLobbysystem extends Command {
 				new CommandMinigame(),
 				new CommandBuild(),
 				new CommandSetCubes(),
-				new CommandGetCubes()
+				new CommandGetCubes(),
+				new CommandShowSkullCache()
 		}, "Lobbysystem Hauptcommand");
 	}
 

@@ -14,12 +14,12 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import eu.darkcube.api.cubes.CubesAPI;
+import eu.darkcube.system.language.core.Language;
 import eu.darkcube.system.lobbysystem.Lobby;
 import eu.darkcube.system.lobbysystem.event.EventGadgetSelect;
 import eu.darkcube.system.lobbysystem.gadget.Gadget;
 import eu.darkcube.system.lobbysystem.inventory.abstraction.Inventory;
 import eu.darkcube.system.lobbysystem.pserver.PServerDataManager.PServerUserSlots;
-import eu.darkcube.system.lobbysystem.util.Language;
 import eu.darkcube.system.lobbysystem.util.ParticleEffect;
 import eu.darkcube.system.lobbysystem.util.UUIDManager;
 import net.minecraft.server.v1_8_R3.MinecraftServer;

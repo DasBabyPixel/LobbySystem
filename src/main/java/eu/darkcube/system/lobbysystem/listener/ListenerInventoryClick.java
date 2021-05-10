@@ -6,6 +6,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
+import eu.darkcube.system.language.core.Language;
 import eu.darkcube.system.lobbysystem.Lobby;
 import eu.darkcube.system.lobbysystem.inventory.InventoryConfirm;
 import eu.darkcube.system.lobbysystem.inventory.InventorySettings;
@@ -19,7 +20,6 @@ import eu.darkcube.system.lobbysystem.user.User;
 import eu.darkcube.system.lobbysystem.user.UserWrapper;
 import eu.darkcube.system.lobbysystem.util.Item;
 import eu.darkcube.system.lobbysystem.util.ItemBuilder;
-import eu.darkcube.system.lobbysystem.util.Language;
 
 public class ListenerInventoryClick extends BaseListener {
 
@@ -40,7 +40,7 @@ public class ListenerInventoryClick extends BaseListener {
 			String languageId = new ItemBuilder(item).getUnsafe().getString("language");
 			if (languageId == null || languageId.isEmpty())
 				break language;
-			Language language = Language.valueOf(languageId);
+			Language language = Language.fromString(languageId);
 			int i = 0;
 			for (; i < Language.values().length; i++) {
 				if (Language.values()[i] == language) {
@@ -54,6 +54,7 @@ public class ListenerInventoryClick extends BaseListener {
 			boolean oldS = user.isSounds();
 			user.setSounds(false);
 			ListenerSettingsJoin.instance.handle(new PlayerJoinEvent(p, "NoSpawnTeleport"));
+			user.setGadget(user.getGadget());
 			user.setOpenInventory(new InventorySettings(user));
 			p.setFlying(true);
 			user.setSounds(oldS);
