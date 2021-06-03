@@ -276,6 +276,7 @@ public abstract class User {
 
 	public User setLanguage(Language language) {
 		this.language = language;
+		Language.setLanguage(uuid, language);
 		return this;
 	}
 

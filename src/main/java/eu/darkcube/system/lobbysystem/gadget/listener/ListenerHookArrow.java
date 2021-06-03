@@ -43,7 +43,7 @@ public class ListenerHookArrow extends BaseListener {
 
 	private Collection<UUID> cooldownPlayers = new HashSet<>();
 	private Map<UUID, Collection<Bat>> bats = new HashMap<>();
-	private Map<UUID, Collection<BukkitRunnable>> PULL_TASK_BY_UUID = new HashMap<>();
+	private Map<UUID, Collection<BukkitRunnable>> pullTaskByUUID = new HashMap<>();
 
 	@EventHandler
 	public void handle(ProjectileHitEvent e) {
@@ -202,8 +202,8 @@ public class ListenerHookArrow extends BaseListener {
 
 	private void pullEntityToLocation(Player p, Projectile projectile) {
 		Location location = projectile.getLocation();
-		if (PULL_TASK_BY_UUID.get(p.getUniqueId()) == null)
-			PULL_TASK_BY_UUID.put(p.getUniqueId(), new HashSet<>());
+		if (pullTaskByUUID.get(p.getUniqueId()) == null)
+			pullTaskByUUID.put(p.getUniqueId(), new HashSet<>());
 		BukkitRunnable runnable = new BukkitRunnable() {
 
 			private int count = 0;
@@ -240,13 +240,13 @@ public class ListenerHookArrow extends BaseListener {
 			public synchronized void cancel() {
 				p.setAllowFlight(true);
 				projectile.remove();
-				if (!PULL_TASK_BY_UUID.containsKey(p.getUniqueId())) {
-					PULL_TASK_BY_UUID.get(p.getUniqueId()).remove(this);
+				if (!pullTaskByUUID.containsKey(p.getUniqueId())) {
+					pullTaskByUUID.get(p.getUniqueId()).remove(this);
 				}
 				super.cancel();
 			}
 		};
-		PULL_TASK_BY_UUID.get(p.getUniqueId()).add(runnable);
+		pullTaskByUUID.get(p.getUniqueId()).add(runnable);
 		runnable.runTaskTimer(Lobby.getInstance(), 3, 2);
 	}
 

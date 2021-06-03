@@ -2,4 +2,5 @@ main: eu.darkcube.system.lobbysystem.Lobby
 version: 1.0
 author: DasBabyPixel
 name: LobbySystem
-softdepend: [System,PServer]
+depend: [System, InventoryAPI, LanguageAPICore]
+softdepend: [PServer]

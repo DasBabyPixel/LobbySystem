@@ -87,41 +87,7 @@ public class Lobby extends Plugin {
 		Language.validateEntries(languageEntries.toArray(new String[languageEntries.size()]), s -> Message.KEY_PREFIX
 						+ s);
 
-//		for (Language language : Language.values()) {
-//			if (language.getBundle() != null) {
-//				for (Message message : Message.values()) {
-//					if (message.getMessage(language).startsWith(message.getKey())) {
-//						sendConsole("§cCould not load message "
-//										+ message.getKey() + " in language "
-//										+ language.toString());
-//					}
-//				}
-//			} else {
-//				sendConsole("§cLanguage bundle for language "
-//								+ language.toString() + " could not be found!");
-//			}
-//			for (Item item : Item.values()) {
-//				String id = item.getItemId();
-//				try {
-//					language.getBundle().getString(id);
-//				} catch (Exception ex) {
-//					sendConsole("§cCould not load item name " + id
-//									+ " in language " + language.name());
-//				}
-//				if (item.getBuilder().getLores().size() != 0) {
-//					id = item.name();
-//					try {
-//						language.getBundle().getString(Message.PREFIX_ITEM
-//										+ Message.PREFIX_LORE + id);
-//					} catch (Exception ex) {
-//						sendConsole("§cCould not load item lore "
-//										+ Message.PREFIX_ITEM
-//										+ Message.PREFIX_LORE + id
-//										+ " in language " + language.name());
-//					}
-//				}
-//			}
-//		}
+		UserWrapper.init();
 
 		dataManager = new DataManager();
 		woolbattleNpc = new WoolBattleNPC();

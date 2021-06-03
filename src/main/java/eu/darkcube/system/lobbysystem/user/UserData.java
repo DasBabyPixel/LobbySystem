@@ -20,7 +20,7 @@ public class UserData implements Serializable {
 	private boolean sounds = true;
 	private boolean animations = true;
 	private long lastDailyReward = 0;
-	private Set<Integer> rewardSlotsUsed;
+	private Set<Integer> rewardSlotsUsed = new HashSet<>();
 
 	public UserData() {
 		this(null, null);
@@ -48,7 +48,7 @@ public class UserData implements Serializable {
 		lastDailyReward = document.getLong("lastDailyReward");
 		rewardSlotsUsed = document.get("rewardSlotsUsed", new TypeToken<Set<Integer>>() {
 			private static final long serialVersionUID = -2586151616370404958L;
-		}.getType(), new HashSet<>());
+		}.getType(), rewardSlotsUsed);
 	}
 
 	public UserData(Language language, Gadget gadget, boolean sounds,

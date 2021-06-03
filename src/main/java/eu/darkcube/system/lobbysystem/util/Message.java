@@ -1,5 +1,7 @@
 package eu.darkcube.system.lobbysystem.util;
 
+import org.bukkit.ChatColor;
+
 import eu.darkcube.system.language.core.Language;
 import eu.darkcube.system.lobbysystem.user.User;
 
@@ -47,7 +49,8 @@ public enum Message {
 
 	public static String getMessage(String key, Language language,
 					Object... replacements) {
-		return language.getMessage(KEY_PREFIX + key, replacements);
+		return ChatColor.translateAlternateColorCodes('&', language.getMessage(KEY_PREFIX
+						+ key, replacements));
 	}
 
 //	public static final String getMessage(String key, Language language,

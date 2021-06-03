@@ -15,6 +15,9 @@ public class UserWrapper {
 	public static Map<UUID, User> users = new HashMap<>();
 	private static Database database = CloudNetDriver.getInstance().getDatabaseProvider().getDatabase("lobbysystem_userdata");
 
+	public static void init() {
+	}
+	
 	public static User loadUser(UUID uuid) {
 		if (!isLoaded(uuid)) {
 			JsonDocument doc = database.get(uuid.toString());
@@ -36,7 +39,6 @@ public class UserWrapper {
 
 	public static User saveUser(User user) {
 		database.update(user.getUniqueId().toString(), user.newUserData().serializeToDocument());
-		Language.setLanguage(user.getUniqueId(), user.getLanguage());
 		user.getSlots().save();
 		return user;
 	}
