@@ -29,7 +29,8 @@ public class DataManager {
 		database = CloudNetDriver.getInstance().getDatabaseProvider().getDatabase("lobbysystem_data");
 		databaseUserpos = CloudNetDriver.getInstance().getDatabaseProvider().getDatabase("lobbysystem_userpos");
 		setDefault("spawn", Locations.toDocument(Locations.DEFAULT, false));
-		setDefault("border", new Border(Shape.CIRCLE, 100, Locations.DEFAULT, null).serializeToDocument());
+		setDefault("border", new Border(Shape.CIRCLE, 100, Locations.DEFAULT,
+						null).serializeToDocument());
 		setDefault("woolbattleNPCLocation", Locations.toDocument(Locations.DEFAULT, false));
 		setDefault("dailyrewardNPCLocation", Locations.toDocument(Locations.DEFAULT, false));
 		setDefault("woolbattleSpawn", Locations.toDocument(Locations.DEFAULT, false));
@@ -50,7 +51,8 @@ public class DataManager {
 				border = Border.GSON.fromJson(doc.toJson(), Border.class);
 				fetchWoolBattleTasks();
 			}
-		}.runTaskTimerAsynchronously(Lobby.getInstance(), 20 * 60 * 2, 20 * 60 * 2);
+		}.runTaskTimerAsynchronously(Lobby.getInstance(), 20 * 60 * 2, 20 * 60
+						* 2);
 	}
 
 	private void setDefault(String key, JsonDocument val) {
@@ -83,7 +85,7 @@ public class DataManager {
 		} catch (Exception ex) {
 			p = null;
 		}
-		if (p == null) {
+		if (p == null || p.getWorld() == null) {
 			p = getSpawn();
 		}
 		return p;
@@ -146,8 +148,9 @@ public class DataManager {
 
 	public JsonDocument toDocument(Location loc) {
 		JsonDocument doc = new JsonDocument();
-		doc.append("p", loc.getX() + ":" + loc.getY() + ":" + loc.getZ() + ":" + loc.getYaw() + ":" + loc.getPitch()
-				+ ":" + loc.getWorld().getUID());
+		doc.append("p", loc.getX() + ":" + loc.getY() + ":" + loc.getZ() + ":"
+						+ loc.getYaw() + ":" + loc.getPitch() + ":"
+						+ loc.getWorld().getUID());
 		return doc;
 	}
 

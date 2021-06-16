@@ -1,5 +1,9 @@
 package eu.darkcube.system.lobbysystem.listener;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
@@ -17,15 +21,27 @@ import eu.darkcube.system.lobbysystem.util.Item;
 
 public class ListenerInteract extends BaseListener {
 
+	private static final Collection<Material> DENIED = Arrays.asList(new Material[] {
+					Material.FENCE_GATE, Material.ACACIA_FENCE_GATE,
+					Material.BIRCH_FENCE_GATE, Material.DARK_OAK_FENCE_GATE,
+					Material.JUNGLE_FENCE_GATE, Material.SPRUCE_FENCE_GATE,
+					Material.ACACIA_DOOR, Material.BIRCH_DOOR,
+					Material.DARK_OAK_DOOR, Material.JUNGLE_DOOR,
+					Material.SPRUCE_DOOR, Material.WOOD_DOOR,
+					Material.WOODEN_DOOR, Material.TRAP_DOOR,
+					Material.STONE_BUTTON, Material.WOOD_BUTTON
+	});
+
 	@EventHandler
 	public void handle(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
 		User user = UserWrapper.getUser(p.getUniqueId());
-		if (!user.isBuildMode() && e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getItem() != null
-				&& e.getItem().getType().isBlock()) {
+		if (!user.isBuildMode() && e.getAction() == Action.RIGHT_CLICK_BLOCK
+						&& DENIED.contains(e.getClickedBlock().getType())) {
 			e.setCancelled(true);
 		}
-		if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) {
+		if (e.getAction() != Action.RIGHT_CLICK_AIR
+						&& e.getAction() != Action.RIGHT_CLICK_BLOCK) {
 			return;
 		}
 		ItemStack item = e.getItem();

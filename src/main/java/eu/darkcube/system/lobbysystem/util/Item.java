@@ -184,10 +184,8 @@ public enum Item {
 		if (builder.getLores().size() != 0) {
 			builder.getLores().clear();
 			String last = null;
-			String fullLore = user.getLanguage().getMessage(Message.PREFIX_ITEM
-							+ Message.PREFIX_LORE
-							+ item.getKey(), loreReplacements);
-			for (String lore : fullLore.split("\\%n")) {
+			String[] lores = getLore(item, user, loreReplacements);
+			for (String lore : lores) {
 				if (last != null) {
 					lore = ChatColor.getLastColors(last) + lore;
 				}
@@ -221,6 +219,12 @@ public enum Item {
 	public static String getDisplayName(Item item, User user,
 					Object... replacements) {
 		return Message.getMessage(getItemId(item), user.getLanguage(), replacements);
+	}
+
+	public static String[] getLore(Item item, User user,
+					Object... loreReplacements) {
+		return Message.getMessage(Message.PREFIX_ITEM + Message.PREFIX_LORE
+						+ item.getKey(), user.getLanguage(), loreReplacements).split("\\%n");
 	}
 
 	public static Item byGadget(Gadget gadget) {
